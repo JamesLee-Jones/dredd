@@ -47,6 +47,15 @@ option(DREDD_WARNING_SUPPRESSIONS
 
 option(DREDD_BUILD_TESTING "Build tests." ${DREDD_PROJECT_IS_ROOT})
 
+option(DREDD_USE_SANITIZERS "Build using asan and ubsan" OFF)
+
+if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+  if(DREDD_USE_SANITIZERS)
+    add_compile_options(-fsanitize=address,undefined -fno-sanitize-recover=all -fno-sanitize=vptr)
+    add_link_options(-fsanitize=address,undefined -fno-sanitize-recover=all -fno-sanitize=vptr)
+  endif()
+endif()
+
 if(DREDD_PROJECT_IS_ROOT)
   # Set some global compiler flags.
   set(CMAKE_CXX_STANDARD 20)
